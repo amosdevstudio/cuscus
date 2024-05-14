@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuscus - Login</title>
+    <script src="https://unpkg.com/htmx.org@1.9.12" integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2" crossorigin="anonymous"></script>
+
+</head>
+<body>
+    <form method="POST" hx-post="/login-user" hx-target="#login-status" hx-swap="innerHTML">
+            <label for="username">Username:</label>
+            <input type="text" name="username" id="username">
+            <label for="pwd">Password:</label>
+            <input type="text" name="pwd" id="pwd">
+            <button type="submit" onclick="setCookie()">Submit</button>
+    </form>
+    <div id="login-status"></div>
+
+    <script>
+        function setCookie(){
+            let username = escape(document.getElementById("username").value)
+            let pwd = escape(document.getElementById("pwd").value)
+            let today = new Date()
+            let expiry = new Date(today.getTime() + 30 * 24 * 3600 * 1000)
+
+            document.cookie = "username=" + username + ";path=/; expires=" + expiry.toGMTString()
+            document.cookie = "pwd=" + pwd + ";path=/; expires=" + expiry.toGMTString()
+        }
+    </script>
+</body>
+</html>
