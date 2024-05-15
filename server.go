@@ -13,7 +13,7 @@ const (
     FEED_PATH = "/feed/"
     LOGIN_PATH = "/login/"
 
-    MSG_TEMPLATE = "<div class=\"message\"><p>%s</p><p>%s</p></div>"
+    MSG_TEMPLATE = "<div class=\"message\"><p class=\"username\">%s</p><p class=\"msg-text\">%s</p></div>"
     TMP_TEMPLATE = "<div id=\"tmp-lastMsg\">%d</div>"
 )
 

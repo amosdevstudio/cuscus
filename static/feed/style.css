@@ -1,9 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Reddit+Sans:ital,wght@0,200..900;1,200..900&display=swap');
+
 *{
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    font-family: "Reddit Sans", sans-serif;
+    scroll-behavior: smooth;
 }
 
 body{
-    background-color: black;
+    background-color: #101d10;
+    color: white;
+}
+
+
+#messages{
+    height: 82vmin;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+}
+
+.message{
+    /*background: linear-gradient(0deg, #9aabcd, #abbcde);*/
+    margin: auto;
+    padding: 3vmin;
+    width: 70vmin;
+    display: flex;
+    flex-direction: column;
+    border-style: solid;
+    border-radius: 2vmin;
+    border-width: 1px;
+    margin-top: 3vmin;
+    border-bottom-right-radius: 7vmin;
+    border-top-right-radius: 7vmin;
+    scroll-snap-align: end;
+}
+
+.username{
+    border-style: solid;
+    border-width: 0;
+    border-bottom-width: 1px;
+}
+
+.msg-text{
+    padding-top: 1vmin;
 }
