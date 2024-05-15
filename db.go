@@ -2,10 +2,13 @@ package main
 
 import (
     "log"
+    "fmt"
 
     "github.com/jmoiron/sqlx"
     _ "github.com/lib/pq"
 )
+
+const DB_PWD = "fottutapassword"
 
 type User struct {
     Name  string `db:"username"`
@@ -23,7 +26,8 @@ var db *sqlx.DB
 
 func initDB() {
     var err error
-    db, err = sqlx.Connect("postgres", "user=postgres dbname=cuscus sslmode=disable password=fottutapassword host=localhost")
+
+    db, err = sqlx.Connect("postgres", fmt.Sprintf("user=postgres dbname=cuscus sslmode=disable password=%s host=localhost", DB_PWD))
     if err != nil {
         log.Fatalln(err)
     }

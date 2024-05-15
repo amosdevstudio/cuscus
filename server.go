@@ -56,7 +56,9 @@ func handleLogin (w http.ResponseWriter, r *http.Request){
     username := r.FormValue("username")
     pwd := r.FormValue("pwd")
     exists := userExists(username)
-    if exists && authUser(username, pwd){
+    if username == "" || pwd == "" {
+        w.Write([]byte("NUH - UH!! Insert username and password."))
+    } else if exists && authUser(username, pwd){
         w.Write([]byte("YUH - UHH; password right. :) <a href=\"/feed\">Login</a>"))
     } else if exists {
         w.Write([]byte("NUH - UH!! Password is wrong. :("))

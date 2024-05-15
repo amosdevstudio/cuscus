@@ -8,12 +8,12 @@
 
 </head>
 <body>
-    <form method="POST" hx-post="/login-user" hx-target="#login-status" hx-swap="innerHTML">
+    <form method="POST" hx-post="/login-user/" hx-target="#login-status" hx-swap="innerHTML" hx-on::after-request="setCookie()">
             <label for="username">Username:</label>
-            <input type="text" name="username" id="username">
+            <input type="text" name="username" id="username"></input>
             <label for="pwd">Password:</label>
-            <input type="text" name="pwd" id="pwd">
-            <button type="submit" onclick="setCookie()">Submit</button>
+            <input type="text" name="pwd" id="pwd"></input>
+            <button type="submit">Submit</button>
     </form>
     <div id="login-status"></div>
 
