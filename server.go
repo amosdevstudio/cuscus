@@ -88,7 +88,7 @@ func main() {
     http.HandleFunc("/login-user/", handleLogin)
 
     fmt.Printf("Server running on port %s\n", PORT)
-    err := http.ListenAndServe(PORT, nil)
+    err := http.ListenAndServeTLS(PORT, "localhost.crt", "localhost.key", nil)
     if err != nil{
         fmt.Println(err)
     }

@@ -4,12 +4,15 @@ Simple full-stack project in HTMX, Go and Postgres.
 
 ## Security notes ##
 
-DO NOT USE THIS PROJECT FOR COMMERCIAL PURPOSES AS IS!!! The security is very much flawed.
+DO NOT USE THIS PROJECT FOR COMMERCIAL PURPOSES AS IS!!! The security is not the best.
 While I tried to make it secure from SQL injections (using SQL parameters), XSS (escaping the text on the server),
-and rooting (the passwords are salted and hashed on the database using a psql extention called crypt), it is surely
-vulnerable to a simple MITM attack,
-as it doen't use https and it sends username and password in PLAIN TEXT to
-send any message (as it doesn't use session cookies), and I'm sure there are many more vulnerabilities (I'm not an expert).
+rooting (the passwords are salted and hashed on the database using a psql extension called crypt), and it uses
+https to hopefully avoid MITM attacks, it probably has other vulnerabilities.
+I am not a cybersecurity expert and this is just a fun project.
+
+One example is that it doesn't use sessions. To send a message the client sends username and password to the server.
+It shouldn't be a huge problem as they are sent through https, but if someone performs an elaborate MITM attack
+they could get username and password. So DON'T use your real password on this site. You never know.
 
 ## How to run ##
 
@@ -26,17 +29,16 @@ send any message (as it doesn't use session cookies), and I'm sure there are man
 
 On Ubuntu:
 ```
-sudo apt install postgresql golang
+sudo apt install postgresql golang openssl
 ```
-
 
 On Arch
 ```
-sudo pacman -S postgresql go
+sudo pacman -S postgresql go openssl
 ```
 or
 ```
-yay -S postgresql go
+yay -S postgresql go openssl
 ```
 
 #### Start Database ####
@@ -93,14 +95,34 @@ Open up the "db.go" file in your favourite text
 editor and modify the line where it says ```const DB_PWD = "fottutapassword" ```
 after the imports, and modify the value to match your password.
 
-### Step 3: Run the server ###
+### Step 3: Set up TLS certificates ###
+
+Before we can use https we need a certificate. Run the following command to generate a private key file and a certificate signing request.
+```
+openssl req  -new  -newkey rsa:2048  -nodes  -keyout localhost.key  -out localhost.csr
+```
+It's going to ask you a few questions. You don't need to answer them.
+
+Now that we have those, we need to run the following command to generate the certificate based on them.
+```
+openssl  x509  -req  -days 365  -in localhost.csr  -signkey localhost.key  -out localhost.crt
+```
+
+Now you have 3 files: localhost.csr, localhost.crt and localhost.key. Those are going to be used by go to encrypt the data (hopefully avoiding a MITM attack).
+
+### Step 4: Run the server ###
 
 Type (in the main dir):
-
 ```
 go run *.go
 ```
 
+Or, if you prefer to build to a file:
+```
+go build
+./cuscus
+```
+
 ## All done!! ##
 
-Now you can visit http://localhost:8080 to login the website and start typing!
+Now you can visit https://localhost:8080 to login the website and start typing!
