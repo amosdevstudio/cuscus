@@ -10,9 +10,7 @@ rooting (the passwords are salted and hashed on the database using a psql extens
 https to hopefully avoid MITM attacks, it probably has other vulnerabilities.
 I am not a cybersecurity expert and this is just a fun project.
 
-One example is that it doesn't use sessions. To send a message the client sends username and password to the server.
-It shouldn't be a huge problem as they are sent through https, but if someone performs an elaborate MITM attack
-they could get username and password. So DON'T use your real password on this site. You never know.
+DON'T use your real password on this site. You never know.
 
 ## How to run ##
 
@@ -83,7 +81,7 @@ Then finally:
 
 ```
 CREATE EXTENSION pgcrypto; -- Add pgcrypto extension (for hashing and salting passwords)
-CREATE TABLE users (username VARCHAR(40) PRIMARY KEY, password_hash VARCHAR(100), userid SERIAL); -- Creates user table
+CREATE TABLE users (username VARCHAR(40) PRIMARY KEY, password_hash VARCHAR(100), userid SERIAL, sessionid CHAR(64)); -- Creates user table
 CREATE TABLE messages (message VARCHAR(10000), username VARCHAR(40), messageid SERIAL PRIMARY KEY); -- Creates messages table (username refers to the sender's username)
 ```
 

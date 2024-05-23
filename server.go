@@ -14,7 +14,6 @@ const (
     LOGIN_PATH = "/login/"
 
     MSG_TEMPLATE = "<div class=\"message\"><p class=\"username\">%s</p><p class=\"msg-text\">%s</p></div>"
-    TMP_TEMPLATE = "<div id=\"tmp-lastMsg\">%d</div>"
 )
 
 var (
@@ -34,18 +33,18 @@ func getMsgs(lastMsgStr string) []byte{
     for _, msg := range *msgs{
         buffer.WriteString(fmt.Sprintf(MSG_TEMPLATE, html.EscapeString(msg.Username), html.EscapeString(msg.Message)))
     }
-    buffer.WriteString(fmt.Sprintf(TMP_TEMPLATE, msgCount))
 
     return buffer.Bytes()
 }
 
 func handleChat (w http.ResponseWriter, r *http.Request){
-    w.Write(getMsgs(r.FormValue("lastmsgid")))
+    w.Header().Add("HX-Trigger",  fmt.Sprintf("{\"setMsgCount\":\"%d\"}", msgCount))
+    w.Write(getMsgs(r.FormValue("msgCount")))
 }
 
 func handlePost(w http.ResponseWriter, r *http.Request){
     username := r.FormValue("username")
-    if authUser(username, r.FormValue("pwd")){
+    if authSession(username, r.FormValue("sessionid")){
         msgCount = addMessage(r.FormValue("text"), username)
     } else {
         w.WriteHeader(http.StatusUnauthorized)
@@ -59,11 +58,14 @@ func handleLogin (w http.ResponseWriter, r *http.Request){
     if username == "" || pwd == "" {
         w.Write([]byte("NUH - UH!! Insert username and password."))
     } else if exists && authUser(username, pwd){
+        sessionid := changeSessionid(username)
+        w.Header().Add("HX-Trigger",  fmt.Sprintf("{\"setSessionId\":\"%s\"}", sessionid))
         w.Write([]byte("YUH - UHH; password right. :) <a href=\"/feed\">Login</a>"))
     } else if exists {
         w.Write([]byte("NUH - UH!! Password is wrong. :("))
     } else {
-        addUser(username, pwd)
+        sessionid := addUser(username, pwd)
+        w.Header().Add("HX-Trigger",  fmt.Sprintf("{\"setSessionId\":\"%s\"}", sessionid))
         w.Write([]byte("YIPPIEE!!:3 User created. <a href=\"/feed\">Login</a>"))
     }
 

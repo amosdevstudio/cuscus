@@ -1,15 +1,10 @@
-let lastMsg = 0
-let username = ""
-let pwd = ""
+let msgCount = 0
 
-function changeLastMsg(){
-    let el = document.getElementById("tmp-lastMsg")
-    if (el == null){return}
-    lastMsg = el.innerText
-    el.remove()
+function setMsgCount(evt){
+    msgCount = evt.detail.value
 }
 
-let cookie = document.cookie.split(";")
-username = cookie[0].split('=')[1]
-pwd = cookie[1].split('=')[1]
+let sessionid = document.cookie.split("sessionid=")[1]
+let username = document.cookie.split("username=")[1].split("; sessionid=")[0]
 
+document.body.addEventListener("setMsgCount", setMsgCount)

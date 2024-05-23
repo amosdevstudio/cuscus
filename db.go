@@ -8,12 +8,19 @@ import (
     _ "github.com/lib/pq"
 )
 
-const DB_PWD = "fottutapassword"
+const (
+    DB_PWD = "fottutapassword"
+    DB_USER = "postgres"
+    DB_NAME = "cuscus"
+    DB_SSL_MODE = "disable" // Since it's on localhost, it's pretty much useless
+    DB_HOST = "localhost"
+)
 
 type User struct {
     Name  string `db:"username"`
     PasswordHash string `db:"password_hash"`
     UserId int `db:"userid"`
+    SessionId string `db:"sessionid"`
 }
 
 type Message struct {
@@ -27,7 +34,7 @@ var db *sqlx.DB
 func initDB() {
     var err error
 
-    db, err = sqlx.Connect("postgres", fmt.Sprintf("user=postgres dbname=cuscus sslmode=disable password=%s host=localhost", DB_PWD))
+    db, err = sqlx.Connect("postgres", fmt.Sprintf("user=%s dbname=%s sslmode=%s password=%s host=%s", DB_USER, DB_NAME, DB_SSL_MODE, DB_PWD, DB_HOST))
     if err != nil {
         log.Fatalln(err)
     }
@@ -42,7 +49,7 @@ func initDB() {
 func countMsgs() int {
     count := 0
     db.Get(&count, "SELECT currval('messageid') FROM messages;")
-    return count
+    return count +1
 }
 
 func userExists(username string) bool {
@@ -54,11 +61,13 @@ func userExists(username string) bool {
     return (exists == 1)
 }
 
-func addUser(username string, pwd string){
-    _, err := db.Queryx("INSERT INTO users (username, password_hash) VALUES ($1, crypt($2, gen_salt('md5')));", username, pwd)
+func addUser(username string, pwd string) string{
+    sessionid := genSessionid()
+    _, err := db.Queryx("INSERT INTO users (username, password_hash, sessionid) VALUES ($1, crypt($2, gen_salt('md5')), $3);", username, pwd, sessionid)
     if err != nil{
         log.Println(err)
     }
+    return sessionid
 }
 
 func addMessage(message string, username string) int {
@@ -86,6 +95,24 @@ func authUser(username string, pwd string) bool{
         log.Println(err)
     }
     return result
+}
+
+func authSession (username string, sessionid string) bool{
+    result := false
+    err := db.Get(&result, `SELECT (sessionid = $1) AS session_match FROM users WHERE username = $2;`, sessionid, username)
+    if err != nil{
+        log.Println(err)
+    }
+    return result
+}
+
+func changeSessionid (username string) string {
+    sessionid := genSessionid()
+    _, err := db.Queryx("UPDATE users SET sessionid = $1 WHERE username = $2", sessionid, username)
+    if err != nil{
+        log.Println(err)
+    }
+    return sessionid
 }
 
 func closeDB (){

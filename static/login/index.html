@@ -8,6 +8,7 @@
 
 </head>
 <body>
+    <script src="script.js"></script>
     <form method="POST" hx-post="/login-user/" hx-target="#login-status" hx-swap="innerHTML" hx-on::after-request="setCookie()">
             <label for="username">Username:</label>
             <input type="text" name="username" id="username"></input>
@@ -16,17 +17,5 @@
             <button type="submit">Submit</button>
     </form>
     <div id="login-status"></div>
-
-    <script>
-        function setCookie(){
-            let username = escape(document.getElementById("username").value)
-            let pwd = escape(document.getElementById("pwd").value)
-            let today = new Date()
-            let expiry = new Date(today.getTime() + 30 * 24 * 3600 * 1000)
-
-            document.cookie = "username=" + username + ";path=/; expires=" + expiry.toGMTString()
-            document.cookie = "pwd=" + pwd + ";path=/; expires=" + expiry.toGMTString()
-        }
-    </script>
 </body>
 </html>

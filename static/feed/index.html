@@ -9,11 +9,11 @@
 </head>
 <body>
         <script src="script.js"></script>
-        <section id="messages" hx-get="/chat/" hx-trigger="load" hx-swap="innerHTML" hx-vals='{"lastmsgid": "0"}' hx-on::after-request="changeLastMsg()">Wait...</section>
-        <form method="POST" hx-post="/post/" hx-swap="none" hx-vals='js:{"username": username, "pwd": pwd}'>
+        <section id="messages" hx-get="/chat/" hx-trigger="load" hx-swap="innerHTML" hx-vals='{"msgCount": "0"}'>Wait...</section>
+        <form method="POST" hx-post="/post/" hx-swap="none" hx-vals='js:{"username": username, "sessionid": sessionid}'>
             <input name="text" type="text"></input>
             <button type="submit">Send</button>
         </form>
-        <button type="submit" hx-get="/chat" hx-trigger="click" hx-target="#messages" hx-swap="afterbegin" hx-on::after-request="changeLastMsg()" hx-vals='js:{"lastmsgid": lastMsg}'>Load</button>
+        <button type="submit" hx-get="/chat/" hx-trigger="click" hx-target="#messages" hx-swap="afterbegin" hx-vals='js:{"msgCount": msgCount}'>Load</button>
 </body>
 </html>
