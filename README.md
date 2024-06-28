@@ -1,6 +1,6 @@
 # CusCus #
 
-Simple full-stack project in HTMX, Go and Postgres.
+Simple full-stack twitter clone (kinda) using HTMX, Go and Postgres.
 
 ## Security notes ##
 
@@ -19,7 +19,8 @@ DON'T use your real password on this site. You never know.
 
 > [!TIP]
 > If you are using Mac or Windows, you can install a package manager
-(like chocolatey for Windows or homebrew for Mac), that will make your life easier.
+> (like chocolatey for Windows or homebrew for Mac), that will make your life easier
+> (Or use WSL if on Windows).
 
 ### Step 1: Set up Postgres and Go ###
 
@@ -47,7 +48,8 @@ yay -S postgresql go openssl
 > for other machines you can just look up how to start the server online.
 
 ```
-sudo systemctl start postgresql.service
+sudo -u postgres initdb --locale=C.UTF-8 --encoding=UTF8 -D '/var/lib/postgres/data'
+sudo systemctl start --now postgresql.service
 sudo -u postgres psql
 ```
 
@@ -72,7 +74,7 @@ DROP DATABASE IF EXISTS cuscus; -- Delete cuscus db if exists
 CREATE DATABASE cuscus; -- Well... that
 ```
 
-Then type:
+Then connect to the database using:
 ```
 \c cuscus
 ```
