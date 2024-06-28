@@ -14,6 +14,8 @@
             <input name="text" type="text"></input>
             <button type="submit">Send</button>
         </form>
-        <button type="submit" hx-get="/chat/" hx-trigger="click" hx-target="#messages" hx-swap="afterbegin" hx-vals='js:{"msgCount": msgCount}'>Load</button>
+        <button id="load-button" type="submit" hx-get="/chat/" hx-trigger="click" hx-target="#messages" hx-swap="afterbegin" hx-vals='js:{"msgCount": msgCount}'>
+            <img src="reload-arrow-svgrepo-com.svg" alt="reload">
+        </button>
 </body>
 </html>
