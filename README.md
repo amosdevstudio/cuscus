@@ -100,6 +100,7 @@ after the imports, and modify the value to match your password.
 Before we can use https we need a certificate.
 First, cd into the "certs" directory
 ```
+mkdir certs
 cd certs
 ```
 Then, run the following command to generate a private key file and a certificate signing request.
