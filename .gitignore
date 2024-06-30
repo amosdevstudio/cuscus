@@ -1,4 +1,2 @@
-personalaccess.token
-localhost.csr
-localhost.key
-localhost.crt
+build
+certs
