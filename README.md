@@ -87,6 +87,12 @@ CREATE TABLE users (username VARCHAR(40) PRIMARY KEY, password_hash VARCHAR(100)
 CREATE TABLE messages (message VARCHAR(10000), username VARCHAR(40), messageid SERIAL PRIMARY KEY); -- Creates messages table (username refers to the sender's username)
 ```
 
+Now you can exit psql.
+
+```
+\q
+```
+
 ### Step 2: Configure db.go ###
 
 You can skip this step if your password is "fottutapassword".
@@ -117,6 +123,11 @@ openssl  x509  -req  -days 365  -in localhost.csr  -signkey localhost.key  -out 
 Now you have 3 files: localhost.csr, localhost.crt and localhost.key. Those are going to be used by go to encrypt the data.
 
 ### Step 4: Run the server ###
+
+Go back to the main dir
+```
+cd ..
+```
 
 Type (in the main dir):
 ```
