@@ -49,7 +49,7 @@ yay -S postgresql go openssl
 
 ```
 sudo -u postgres initdb --locale=C.UTF-8 --encoding=UTF8 -D '/var/lib/postgres/data'
-sudo systemctl start --now postgresql.service
+sudo systemctl enable --now postgresql.service
 sudo -u postgres psql
 ```
 
@@ -97,7 +97,12 @@ after the imports, and modify the value to match your password.
 
 ### Step 3: Set up TLS certificates ###
 
-Before we can use https we need a certificate. Run the following command to generate a private key file and a certificate signing request.
+Before we can use https we need a certificate.
+First, cd into the "certs" directory
+```
+cd certs
+```
+Then, run the following command to generate a private key file and a certificate signing request.
 ```
 openssl req  -new  -newkey rsa:2048  -nodes  -keyout localhost.key  -out localhost.csr
 ```
@@ -108,20 +113,21 @@ Now that we have those, we need to run the following command to generate the cer
 openssl  x509  -req  -days 365  -in localhost.csr  -signkey localhost.key  -out localhost.crt
 ```
 
-Now you have 3 files: localhost.csr, localhost.crt and localhost.key. Those are going to be used by go to encrypt the data (hopefully avoiding a MITM attack).
+Now you have 3 files: localhost.csr, localhost.crt and localhost.key. Those are going to be used by go to encrypt the data.
 
 ### Step 4: Run the server ###
 
 Type (in the main dir):
 ```
-go run *.go
+make bar
 ```
 
-Or, if you prefer to build to a file:
-```
-go build
-./cuscus
-```
+This will build and run your application. Build files are in the "build" directory.
+
+> [!WARNING]
+> Only run the app from the main (cuscus) directory.
+> Do not run from the build dir or any other dir, as the file paths in the app are calculated
+relative to the current directory, not the binary directory or an absolute path (should be fixed).
 
 ## All done!! ##
 
